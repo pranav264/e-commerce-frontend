@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import 'primeflex/primeflex.css';  
+import 'primereact/resources/primereact.css';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import Home from "./Pages/Home";
+import 'primeicons/primeicons.css';
+import axios from "axios";
+import { useEffect, useState } from "react";
+const { REACT_APP_URL } = process.env;
 
 function App() {
+  const [username, setUsername] = useState("");
+
+  const login = async () => {
+    const response = await axios.post(`${REACT_APP_URL}/users/login`, {
+      username: "Pranav234",
+      password: "pranav456"
+    });
+
+    setUsername(response.data.username);
+    sessionStorage.setItem("token", response.data.token);
+  }
+
+  useEffect(() => {
+    login();
+  },[])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route index element={<Home username={username} />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
