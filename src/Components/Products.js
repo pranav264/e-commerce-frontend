@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Button } from 'primereact/button';
 import { DataScroller } from 'primereact/datascroller';
 import { Rating } from 'primereact/rating';
 import { Tag } from 'primereact/tag';

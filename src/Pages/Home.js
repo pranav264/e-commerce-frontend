@@ -16,12 +16,24 @@ const { REACT_APP_URL } = process.env;
 const Home = ({ username }) => {
     const [products, setProducts] = useState([]);
     const [searchProducts, setSearchProducts] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
     const [cart, setCart] = useState([]);
     const toast = useRef(null);
 
     const [loadingOne, setLoadingOne] = useState(false);
     const [visible, setVisible] = useState(false);
     const [visibleOne, setVisibleOne] = useState(false);
+
+    const searchAProduct = (e) => {
+        setSearchQuery(e.target.value);
+        const query = e.target.value;
+
+        const filteredArray = products.filter((product) => {
+            return product.name.toLowerCase().includes(query.toLowerCase());
+        })
+
+        setSearchProducts(filteredArray);
+    }
 
     const addToCart = async (productId) => {
         setLoadingOne(true);
@@ -121,7 +133,7 @@ const Home = ({ username }) => {
         <Toast ref={toast} />
         <div className='flex justify-content-start align-items-center flex-wrap gap-5'>
             <div className="p-inputgroup flex-1">
-                <InputText placeholder="Keyword" />
+                <InputText placeholder="Keyword" value={searchQuery} onChange={searchAProduct} />
                 <Button icon="pi pi-search" />
             </div>
             <Avatar label={username[0]} size="large" shape="circle" />
@@ -130,7 +142,7 @@ const Home = ({ username }) => {
             </i>
             <Button label='My Products' onClick={() => setVisibleOne(true)} />
         </div>
-        <DataScroller value={products} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Scroll Down to Load More" />
+        <DataScroller value={searchProducts} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Scroll Down to Load More" />
 
         <Dialog visible={visible} onHide={() => setVisible(false)}>
             <Cart products={cart} getSeverity={getSeverity} toast={toast} username={username} getCart={getCart} />
